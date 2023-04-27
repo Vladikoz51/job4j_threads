@@ -4,12 +4,12 @@ public class ThreadState {
     public static void main(String[] args) {
         Thread first = new Thread(
                 () -> {
-
+                    System.out.println("First thread");
                 }
         );
         Thread second = new Thread(
                 () -> {
-
+                    System.out.println("Second thread");
                 }
         );
         System.out.printf("%s: %s" + System.lineSeparator(), first.getName(), first.getState());
@@ -19,7 +19,7 @@ public class ThreadState {
         do {
             System.out.printf("%s: %s"  + System.lineSeparator(), first.getName(), first.getState());
             System.out.printf("%s: %s"  + System.lineSeparator(), second.getName(), second.getState());
-        } while (first.getState() != Thread.State.TERMINATED && second.getState() != Thread.State.TERMINATED);
+        } while (first.getState() != Thread.State.TERMINATED || second.getState() != Thread.State.TERMINATED);
         System.out.printf("%s: %s"  + System.lineSeparator(), first.getName(), first.getState());
         System.out.printf("%s: %s"  + System.lineSeparator(), second.getName(), second.getState());
 
