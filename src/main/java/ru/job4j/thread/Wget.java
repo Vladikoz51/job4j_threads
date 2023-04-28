@@ -12,32 +12,31 @@ import java.time.Instant;
 public class Wget implements Runnable {
     private final String url;
     private final int speed;
+    private final String destPath;
 
-    public Wget(String url, int speed) {
+    public Wget(String url, int speed, String destPath) {
         this.url = url;
         this.speed = speed;
+        this.destPath = destPath;
     }
 
     @Override
     public void run() {
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream("tmp.txt")) {
+             FileOutputStream fileOutputStream = new FileOutputStream(destPath)) {
             byte[] dataBuffer = new byte[speed];
             int bytesRead;
-            long actualSpeed;
-            while (true) {
-                Instant start = Instant.now();
-                bytesRead = in.read(dataBuffer, 0, speed);
-                Instant finish = Instant.now();
-                if (bytesRead == -1) {
-                    break;
+            long actualTime;
+            Instant finish;
+            Instant start = Instant.now();
+            while ((bytesRead = in.read(dataBuffer, 0, speed)) != -1) {
+                finish = Instant.now();
+                actualTime = Duration.between(start, finish).toMillis();
+                if (bytesRead == speed && actualTime < 1000) {
+                    Thread.sleep(1000 - actualTime);
                 }
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
-                actualSpeed = Duration.between(start, finish).toMillis();
-                if (actualSpeed < speed) {
-                    Thread.sleep(1000 - actualSpeed);
-                }
-
+                start = Instant.now();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,15 +46,21 @@ public class Wget implements Runnable {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        for (String arg : args) {
+            if (arg == null) {
+                throw new IllegalArgumentException();
+            }
+        }
         String url = args[0];
         int speed = Integer.parseInt(args[1]);
+        String dest = args[2];
         UrlValidator urlValidator = new UrlValidator();
 
         if (!urlValidator.isValid(url) || speed <= 0) {
             throw new IllegalArgumentException();
         }
 
-        Thread wget = new Thread(new Wget(url, speed));
+        Thread wget = new Thread(new Wget(url, speed, dest));
         wget.start();
         wget.join();
     }
