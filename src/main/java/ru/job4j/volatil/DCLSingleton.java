@@ -17,14 +17,4 @@ public final class DCLSingleton {
 
     private DCLSingleton() {
     }
-
-    public static void main(String[] args) {
-        Thread thread = new Thread(() -> {
-            DCLSingleton dclSingleton = DCLSingleton.instOf();
-            System.out.println(dclSingleton);
-        });
-        thread.start();
-        System.out.println(instOf());
-    }
-
 }
