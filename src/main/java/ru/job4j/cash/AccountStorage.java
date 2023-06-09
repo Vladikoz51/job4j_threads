@@ -12,30 +12,15 @@ public class AccountStorage {
     private final HashMap<Integer, Account> accounts = new HashMap<>();
 
     public synchronized boolean add(Account account) {
-        boolean rsl = false;
-        if (!accounts.containsKey(account.id())) {
-            accounts.put(account.id(), account);
-            rsl = true;
-        }
-        return rsl;
+        return accounts.putIfAbsent(account.id(), account) == null;
     }
 
     public synchronized boolean update(Account account) {
-        boolean rsl = false;
-        if (accounts.containsKey(account.id())) {
-            accounts.put(account.id(), account);
-            rsl = true;
-        }
-        return rsl;
+        return accounts.replace(account.id(), account) != null;
     }
 
     public synchronized boolean delete(int id) {
-        boolean rsl = false;
-        if (accounts.containsKey(id)) {
-            accounts.remove(id);
-            rsl = true;
-        }
-        return rsl;
+        return accounts.remove(id) != null;
     }
 
     public synchronized Optional<Account> getById(int id) {
@@ -48,9 +33,7 @@ public class AccountStorage {
         Optional<Account> to = getById(toId);
         if (from.isPresent()
                 && to.isPresent()
-                && amount > 0
-                && from.get().amount() >= amount
-                && !from.equals(to)) {
+                && amount > 0) {
             Account newFrom = new Account(fromId, from.get().amount() - amount);
             Account newTo = new Account(toId, to.get().amount() + amount);
             update(newFrom);

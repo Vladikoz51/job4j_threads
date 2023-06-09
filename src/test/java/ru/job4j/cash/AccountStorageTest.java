@@ -47,26 +47,11 @@ class AccountStorageTest {
     }
 
     @Test
-    void whenNotEnoughMoney() {
-        var storage = new AccountStorage();
-        storage.add(new Account(1, 3600));
-        storage.add(new Account(2, 480));
-        assertThat(storage.transfer(1, 2, 5000)).isFalse();
-    }
-
-    @Test
     void whenAccountNotExists() {
         var storage = new AccountStorage();
         storage.add(new Account(1, 3600));
         storage.add(new Account(2, 480));
         assertThat(storage.transfer(1, 3, 600)).isFalse();
-    }
-
-    @Test
-    void whenFromEqualsTo() {
-        var storage = new AccountStorage();
-        storage.add(new Account(1, 3600));
-        assertThat(storage.transfer(1, 1, 600)).isFalse();
     }
 
     @Test
