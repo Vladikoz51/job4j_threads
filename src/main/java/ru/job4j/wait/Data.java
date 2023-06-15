@@ -3,8 +3,6 @@ package ru.job4j.wait;
 public class Data {
     private String packet;
 
-    // True if receiver should wait
-    // False if sender should wait
     private boolean transfer = true;
 
     public synchronized String receive() {
