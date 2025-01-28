@@ -21,7 +21,7 @@ public class ParallelSearch {
         );
         final Thread consumer = new Thread(
                 () -> {
-                    while (!Thread.currentThread().isInterrupted()) {
+                    while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
                         try {
                             System.out.println(queue.poll());
                         } catch (InterruptedException e) {
@@ -34,9 +34,6 @@ public class ParallelSearch {
         producer.start();
         consumer.start();
         producer.join();
-        while (!queue.isEmpty()) {
-
-        }
         consumer.interrupt();
     }
 }
