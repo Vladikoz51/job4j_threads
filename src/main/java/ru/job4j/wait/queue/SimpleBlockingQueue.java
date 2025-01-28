@@ -36,15 +36,10 @@ public class SimpleBlockingQueue<T> {
 
     }
 
-    public synchronized T poll() {
+    public synchronized T poll() throws InterruptedException {
         T rsl;
         while (isEmpty()) {
-            try {
                 wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.err.println("Consumer thread interrupted");
-            }
         }
         rsl = queue.poll();
         notifyAll();

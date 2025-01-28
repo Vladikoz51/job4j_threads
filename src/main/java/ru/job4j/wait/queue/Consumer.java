@@ -10,7 +10,11 @@ public class Consumer implements Runnable {
     @Override
     public void run() {
         while (!queue.isEmpty()) {
-            queue.poll();
+            try {
+                queue.poll();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
