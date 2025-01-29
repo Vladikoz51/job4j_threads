@@ -39,7 +39,7 @@ public class SimpleBlockingQueue<T> {
     public synchronized T poll() throws InterruptedException {
         T rsl;
         while (isEmpty()) {
-                wait();
+            wait();
         }
         rsl = queue.poll();
         notifyAll();
