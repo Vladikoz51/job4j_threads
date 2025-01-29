@@ -1,4 +1,4 @@
-package ru.job4j.CAS;
+package ru.job4j.cas;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package ru.job4j.CAS;
+package ru.job4j.cas;
 
 import net.jcip.annotations.NotThreadSafe;
 
@@ -25,7 +25,6 @@ public class Stack<T> {
         temp.next = null;
         return temp.value;
     }
-
 
     private static final class Node<T> {
         private final T value;
