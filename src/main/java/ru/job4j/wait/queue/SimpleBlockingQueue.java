@@ -23,7 +23,7 @@ public class SimpleBlockingQueue<T> {
     }
 
     public synchronized void offer(T value)  {
-        while (isFull()) {
+        while (queue.size() == size) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -48,9 +48,5 @@ public class SimpleBlockingQueue<T> {
 
     public synchronized boolean isEmpty() {
         return queue.isEmpty();
-    }
-
-    public synchronized boolean isFull() {
-        return queue.size() == size;
     }
 }

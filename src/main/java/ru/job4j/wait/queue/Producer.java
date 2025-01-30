@@ -12,8 +12,6 @@ public class Producer implements Runnable {
     @Override
     public void run() {
         Random random = new Random();
-        while (!queue.isFull()) {
-            queue.offer(random.nextInt());
-        }
+        queue.offer(random.nextInt());
     }
 }
