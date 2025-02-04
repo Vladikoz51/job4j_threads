@@ -9,9 +9,8 @@ public class EmailNotification {
     );
 
     public void emailTo(User user) {
-        pool.submit(() -> send(String.format("Notification %s to email %s", user.getUserName(), user.getEmail())
-                ,String.format("Add a new event to %s", user.getUserName())
-                ,user.getUserName()));
+        pool.submit(() -> send(
+                String.format("Notification %s to email %s", user.getUserName(), user.getEmail()), String.format("Add a new event to %s", user.getUserName()), user.getUserName()));
     }
 
     public void close() {
