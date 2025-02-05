@@ -15,6 +15,13 @@ public class EmailNotification {
 
     public void close() {
         pool.shutdown();
+        while (!pool.isTerminated()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public void send(String subject, String body, String email) {
