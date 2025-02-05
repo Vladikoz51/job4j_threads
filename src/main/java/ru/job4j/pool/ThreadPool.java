@@ -12,7 +12,10 @@ public class ThreadPool {
         for (int i = 0; i < size; i++) {
             threads.add(new Thread(() -> {
                 try {
-                    tasks.poll();
+                    while (!Thread.currentThread().isInterrupted()) {
+                        Runnable job = tasks.poll();
+                        job.run();
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -21,24 +24,36 @@ public class ThreadPool {
     }
 
     public void work(Runnable job) {
-        for (int i = 0; i < 100; i++) {
-            int finalI = i;
-            tasks.offer(() -> {
-                while (!Thread.currentThread().isInterrupted()) {
-                    System.out.println("Task " + finalI + "works.");
+        tasks.offer(job);
+    }
+
+    public void start() {
+        threads.forEach(Thread::start);
+    }
+
+    public void shutdown() {
+        threads.forEach((Thread::interrupt));
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ThreadPool pool = new ThreadPool(10);
+        for (int i = 1; i <= 100; i++) {
+            int taskNum = i;
+            pool.work(() -> {
+                for (int j = 0; j < 10; j++) {
+                    System.out.printf("%s works on task %s%n", Thread.currentThread().getName(), taskNum);
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
             });
         }
-    }
+        pool.start();
+        Thread.sleep(50000);
+        pool.shutdown();
 
-    public void shutdown() {
-        threads.stream()
-                .filter((thread) -> thread.getState().compareTo(Thread.State.RUNNABLE) == 0)
-                .forEach((Thread::interrupt));
+
     }
 }
